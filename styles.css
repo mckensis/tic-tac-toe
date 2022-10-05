@@ -4,6 +4,13 @@
          url("fonts/baby-doll.woff") format("woff");
 }
 
+:root {
+    --color-borders: black;
+    --color-player-one: #231F20;
+    --color-player-two: #515751;
+    --color-bg: #C6B677;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -12,60 +19,110 @@
 
 body {
     display: grid;
-    place-items: center;
     place-content: center;
+    place-items: center;
+    gap: 1rem;
     height: 100vh;
     width: 100vw;
-    font-family: "Babydoll";
+    background-color: var(--color-bg);
+    position: relative;
+}
+
+h1 {
+    font-size: calc(3rem + 5vw);
 }
 
 main.boardContainer {
-    width: 75vh;
-    height: 75vh;
-    position: relative;
+    font-family: "Babydoll";
+    width: 40rem;
+    height: 40rem;
     display: grid;
-    place-items: center;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    place-content: center;
+    grid-template-columns: minmax(1rem, 1fr) minmax(1rem, 1fr) minmax(1rem, 1fr);
+    grid-template-rows: minmax(1rem, 1fr) minmax(1rem, 1fr) minmax(1rem, 1fr);
+
 }
 
 .boardContainer .boardCell {
-    width: 100%;
     height: 100%;
+    width: 100%;
     display: grid;
     place-content: center;
     font-size: 10rem;
+    transition: border 0.5s ease-in-out;
 }
-
 
 .popup {
     display: grid;
     position: absolute;
     place-self: center;
-    place-items: center;
-    font-size: 5rem;
-    background-color: rgba(0,0,0,0.4);
+    text-align: center;
+    font-size: 2rem;
+    gap: 1rem;
+    border: 2px solid black;
+    background-color: rgba(0,0,0,0.8);
     color: white;
     border-radius: 1rem;
-    box-shadow: 0 0 1rem rgba(0,0,0,0.9);
-    width: 90%;
-    height: 10rem;
+    box-shadow: 0 0 1rem rgba(0,0,0,0.6);
+    padding: 0.5rem 1rem;
+
+}
+
+/* Styles for player one */
+.boardCell.X {
+    color: var(--color-player-one);
+}
+
+/* Styles for player two */
+.boardCell.O {
+    color: var(--color-player-two);
+}
+
+.resetButton {
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    border-radius: 2rem;
+    padding: 1rem 2rem;
+    font-size: 2rem;
+    font-weight: bold;
 }
 
 /* Board Border styles */
 .boardContainer :nth-child(4),
 .boardContainer :nth-child(5),
 .boardContainer :nth-child(6) {
-    border-top: 1rem solid black;
-    border-bottom: 1rem solid black;
+    border-top: 0.5rem solid var(--color-borders);
+    border-bottom: 0.5rem solid var(--color-borders);
 }
 .boardContainer :nth-child(1),
 .boardContainer :nth-child(4),
 .boardContainer :nth-child(7) {
-    border-right: 1rem solid black;
+    border-right: 0.5rem solid var(--color-borders);
 }
 .boardContainer :nth-child(3),
 .boardContainer :nth-child(6),
 .boardContainer :nth-child(9) {
-    border-left: 1rem solid black;
+    border-left: 0.5rem solid var(--color-borders);
+}
+
+@media screen and (max-width: 650px) {
+    main.boardContainer {
+        width: 25rem;
+        height: 25rem;
+    }
+
+    .boardContainer .boardCell {
+        font-size: 7rem;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    main.boardContainer {
+        width: 20rem;
+        height: 20rem;
+    }
+
+    .boardContainer .boardCell {
+        font-size: 5rem;
+    }
 }
