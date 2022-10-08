@@ -154,7 +154,7 @@ const displayController = (() => {
     const checkMatches = (cells) => {
 
         cells.sort(function(a, b){return a - b});
-        console.log(cells);
+
 
         if (cells.includes("0")) {
             if (cells.includes("1") && cells.includes("2")) {
@@ -241,11 +241,6 @@ const displayController = (() => {
             currentPlayer = playerOne;
         }
 
-        if (turn === 10) {
-            declareTie();
-            return;
-        }
-
         //If the current player has won immediately return
         if (currentPlayer.winner) {
             return;
@@ -277,6 +272,11 @@ const displayController = (() => {
                 currentPlayer = playerTwo;
             } else {
                 currentPlayer = playerOne;
+            }
+
+            if (turn > 9) {
+                declareTie();
+                return;
             }
         }
     }
