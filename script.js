@@ -39,7 +39,7 @@ const gameBoard = (() => {
         return board;
     }
 
-    return { newBoard, board };
+    return { newBoard, board, boardContainer };
 
 })();
 
@@ -58,12 +58,11 @@ const Player = (name, token) => {
 //This module will control the game flow
 const displayController = (() => {
    
+    //Variables to be used within this module
     let turn;
+    let playerOne;
+    let playerTwo;
     let currentPlayer;
-
-    //Create two new players for the game
-    const playerOne = Player("player one", "X");
-    const playerTwo = Player("player two", "O");
 
     //Event listener for taking a turn
     const listen = () => {
@@ -94,12 +93,58 @@ const displayController = (() => {
         setupGame();
     }
 
+    //Create two new players for the game
+    const getPlayers = () => {
+        const one = document.querySelector("#playerOneName");
+        const two = document.querySelector("#playerTwoName");
+
+        if (!one.value) {
+            one.value = "Player One";
+        }
+        if (!two.value) {
+            two.value = "Player Two";
+        }
+    
+        playerOne = Player(`${one.value}`, "X");
+        playerTwo = Player(`${two.value}`, "O");
+
+        return { playerOne, playerTwo };
+
+    }
+
+    //Displays the player names at the top of the page
+    const displayNames = (playerOne, playerTwo) => {
+
+        const divOne = document.querySelector(".playerOneDiv");
+        const divTwo = document.querySelector(".playerTwoDiv");
+
+        while ((divOne.firstChild) && (divTwo.firstChild)) {
+            divOne.removeChild(divOne.firstChild);
+            divTwo.removeChild(divTwo.firstChild);
+        }
+
+        const pOne = document.createElement("p");
+        const pTwo = document.createElement("p");
+        pOne.classList.add("playerDisplay");
+        pTwo.classList.add("playerDisplay");
+
+        pOne.textContent = playerOne.name;
+        pTwo.textContent = playerTwo.name
+
+        divOne.appendChild(pOne);
+        divTwo.appendChild(pTwo);
+
+    }
+
     //Sets turn to one to begin the game,
     //Creates a board to play on,
     //Activates event listeners
     const setupGame = () => {
+        
         turn = 1;
+        
         gameBoard.newBoard(gameBoard.board);
+        
         listen();
         return;
     }
@@ -108,29 +153,40 @@ const displayController = (() => {
     //Takes in the current player's cells array
     const checkMatches = (cells) => {
 
+        cells.sort(function(a, b){return a - b});
+        console.log(cells);
+
+        if (cells.includes("0")) {
+            if (cells.includes("1") && cells.includes("2")) {
+                return true;
+            }
+            if (cells.includes("3") && cells.includes("6")) {
+                return true;
+            }
+            if (cells.includes("4") && cells.includes("8")) {
+                return true;
+            }
+        }
+
         // Check for matches from middle cell
         if (cells.includes("4")) {
-            if (cells.includes("0") && (cells.includes("8"))) {
-                return true;
-            } else if (cells.includes("1") && (cells.includes("7"))) {
-                return true;
-            } else if (cells.includes("2") && (cells.includes("6"))) {
-                return true;
-            } else if (cells.includes("3") && (cells.includes("5"))) {
+            if (cells.includes("1") && cells.includes("7")) {
                 return true;
             }
-        // Check for matches from top left corner
-        } else if (cells.includes("0")) {
-            if (cells.includes("1") && (cells.includes("2"))) {
-                return true;
-            } else if (cells.includes("3") && (cells.includes("6"))) {
+            if (cells.includes("2") && cells.includes("6")) {
                 return true;
             }
+            if (cells.includes("3") && cells.includes("5")) {
+                return true;
+            }
+        }
+
         // Check for matches from bottom right corner
-        } else if (cells.includes("8")) {
-            if (cells.includes("7") && (cells.includes("6"))) {
+        if (cells.includes("8")) {
+            if (cells.includes("7") && cells.includes("6")) {
                 return true;
-            } else if (cells.includes("5") && (cells.includes("2"))) {
+            }
+            if (cells.includes("5") && cells.includes("2")) {
                 return true;
             }
         }
@@ -141,22 +197,15 @@ const displayController = (() => {
     const displayWinner = (name) => {
 
         winner = name;
-        
+
         //Creating the winner popup on the DOM
         const winnerPopup = document.createElement("div");
         winnerPopup.classList.add("popup");
-        
-        //Declare a tie as default
-        winnerPopup.textContent = "tie game!";
-        
-        //If there is a winner then declare it
-        if (winner !== undefined) {
-            winnerPopup.textContent = `${winner} wins!`;
-        }
+        winnerPopup.textContent = `${winner} wins!`;
         
         //Creating the reset button on the popup
         const resetButton = document.createElement("button");
-        resetButton.textContent = "play again?";
+        resetButton.textContent = "restart";
         resetButton.classList.add("resetButton");
         
         winnerPopup.appendChild(resetButton);
@@ -165,12 +214,36 @@ const displayController = (() => {
         resetButton.addEventListener("click", resetGame);
     }
 
-    const takeTurn = (e) => {
+    const declareTie = () => {
+            
+        //Creating the popup on the DOM
+        const tiePopup = document.createElement("div");
+        tiePopup.classList.add("popup");
+        tiePopup.textContent = "Tie game!";
         
+        //Creating the reset button on the popup
+        const resetButton = document.createElement("button");
+        resetButton.textContent = "restart";
+        resetButton.classList.add("resetButton");
+        
+        tiePopup.appendChild(resetButton);
+        document.body.appendChild(tiePopup);
+
+        resetButton.addEventListener("click", resetGame);
+    }
+
+    //Progresses the game
+    const takeTurn = (e) => {
+
         //If it's the first turn then set the currentPlayer
         //To playerOne
         if (turn === 1) {
             currentPlayer = playerOne;
+        }
+
+        if (turn === 10) {
+            declareTie();
+            return;
         }
 
         //If the current player has won immediately return
@@ -198,21 +271,31 @@ const displayController = (() => {
                 displayWinner(currentPlayer.name);
                 return;
             }
-            
+
             // Alternate player turns after first turn
             if (currentPlayer == playerOne) {
                 currentPlayer = playerTwo;
             } else {
                 currentPlayer = playerOne;
             }
-
-            if (turn === 10) {
-                displayWinner();
-                return;
-            }
         }
     }
-       
-    setupGame();
+
+    //Creates the "start" button and helps set up players
+    const preGame = (gameBoard) => {
+
+        const startButton = document.createElement("button");
+        startButton.classList.add("startButton");
+        startButton.textContent = "Start";
+        gameBoard.appendChild(startButton);
+        startButton.addEventListener("click", () => {
+            gameBoard.removeChild(startButton);
+            getPlayers();
+            displayNames(playerOne, playerTwo);
+            setupGame();
+        });
+    }
+
+    preGame(gameBoard.boardContainer);
 
 })();
