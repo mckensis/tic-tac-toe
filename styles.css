@@ -34,9 +34,10 @@ body {
 }
 
 h1 {
-    font-size: calc(3rem + 3vw);
+    font-size: calc(3rem + 1vw);
     font-family: 'Londrina Shadow', cursive;
     letter-spacing: 0.8ch;
+    text-align: center;
     color: var(--color-dark);
 }
 
@@ -95,45 +96,25 @@ main.boardContainer {
     font-size: 1.7rem;
 }
 
-/* Board Border styles */
-.boardContainer :nth-child(4),
-.boardContainer :nth-child(5),
-.boardContainer :nth-child(6) {
-    border-top: 0.5rem solid var(--color-dark);
-    border-bottom: 0.5rem solid var(--color-dark);
-}
-.boardContainer :nth-child(1),
-.boardContainer :nth-child(4),
-.boardContainer :nth-child(7) {
-    border-right: 0.5rem solid var(--color-dark);
-}
-.boardContainer :nth-child(3),
-.boardContainer :nth-child(6),
-.boardContainer :nth-child(9) {
-    border-left: 0.5rem solid var(--color-dark);
-}
-
 .playerSection {
-    width: 100%;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    width: 100vw;
     grid-auto-flow: column;
     gap: 1rem;
-    place-items: center;
-    place-content: center;
+    padding: 0rem 1rem;
+    place-items: stretch;
+    place-content: stretch;
     margin-bottom: 2rem;
 }
 
-.playerForm,
-.playerDisplay {
-    font-size: 1.4rem;
+.playerSection .playerForm,
+.playerSection .playerDisplay {
+    font-size: 1.2rem;
     display: grid;
     border: 0.25rem solid var(--color-dark);
     background-color: #E5E059;
     margin-top: 1rem;
     padding: 0.5rem;
-    grid-template-columns: 1fr max-content;
-    grid-auto-flow: column;
     place-items: center;
 }
 
@@ -160,10 +141,29 @@ main.boardContainer {
     grid-column: 1;
     padding: 0.5rem;
     font-size: 1.3rem;
+    width: 100%;
 }
 
 .playerForm input::placeholder {
     color: var(--color-dark);
+}
+
+/* Board Border styles */
+.boardContainer :nth-child(4),
+.boardContainer :nth-child(5),
+.boardContainer :nth-child(6) {
+    border-top: 0.5rem solid var(--color-dark);
+    border-bottom: 0.5rem solid var(--color-dark);
+}
+.boardContainer :nth-child(1),
+.boardContainer :nth-child(4),
+.boardContainer :nth-child(7) {
+    border-right: 0.5rem solid var(--color-dark);
+}
+.boardContainer :nth-child(3),
+.boardContainer :nth-child(6),
+.boardContainer :nth-child(9) {
+    border-left: 0.5rem solid var(--color-dark);
 }
 
 @media screen and (max-width: 650px) {
