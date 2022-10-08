@@ -51,8 +51,9 @@ const Player = (name, token) => {
     //Where the player's active placements will be stored
     this.cells = [];
     this.winner = false;
+    this.active = false;
 
-    return { name, token, cells, winner };
+    return { name, token, cells, winner, active };
 };
 
 //This module will control the game flow
